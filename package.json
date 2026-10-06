@@ -1,12 +1,35 @@
 {
   "name": "retrounlock-live",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "author": "RomHackPatcher",
   "private": true,
   "type": "module",
   "description": "Live RetroAchievements overlays for OBS: alerts, progress, and achievement grids.",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "desktop": "electron .",
+    "build:win": "electron-builder --win portable"
+  },
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.romhackpatcher.retrounlock",
+    "productName": "RetroUnlock Companion",
+    "asar": true,
+    "files": [
+      "server.js",
+      "public/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "signAndEditExecutable": false
+    }
+  },
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "24.13.3"
   },
   "engines": {
     "node": ">=20"

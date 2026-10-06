@@ -91,6 +91,19 @@ If you chose a different `PORT` in `.env`, replace `3000` with that number.
 
 To test it, use the **Test animation** button in RetroUnlock Live. It should appear immediately in OBS.
 
+## Windows Companion build
+
+RetroUnlock Live can also be packaged as a Windows desktop application. The desktop version starts the local service and opens the dashboard automatically.
+
+```powershell
+npm install
+npm run build:win
+```
+
+The Windows executable is created in the build output folder. Its private `.env` and overlay data are stored in the Windows user profile, outside the application folder and outside Git. This means an update or a reinstall does not place the API key inside the downloadable application.
+
+The first time the Companion starts, open **RetroUnlock → Open configuration folder**, edit the generated `.env`, then restart the app.
+
 The icon grid automatically refreshes when a new unlock is detected. The alert overlay appears when the local service detects the unlock during its next check.
 
 ## Security and publishing this repository

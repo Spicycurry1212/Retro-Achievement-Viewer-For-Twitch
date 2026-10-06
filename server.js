@@ -3,16 +3,17 @@ import { createServer } from "node:http";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL(".", import.meta.url));
-loadEnv(join(root, ".env"));
+const root = process.env.RETROUNLOCK_APP_ROOT || fileURLToPath(new URL(".", import.meta.url));
+const userDataRoot = process.env.RETROUNLOCK_DATA_DIR || root;
+loadEnv(join(userDataRoot, ".env"));
 const config = { apiKey: process.env.RETROACHIEVEMENTS_API_KEY || "", username: process.env.RETROACHIEVEMENTS_USERNAME || "", pollMs: Math.max(5000, Number(process.env.POLL_INTERVAL_MS) || 10000), port: Number(process.env.PORT) || 3000 };
-const overlaysPath = join(root, "data", "overlays.json");
+const overlaysPath = join(userDataRoot, "data", "overlays.json");
 const clients = new Set(); const seen = new Set();
 let latest = null; let status = config.apiKey && config.username ? "connecting" : "configuration_required"; let gamesCache = { value: [], expiresAt: 0 };
 
 function loadEnv(path) { if (!existsSync(path)) return; for (const raw of readFileSync(path, "utf8").split(/\r?\n/)) { const line = raw.trim(); if (!line || line.startsWith("#")) continue; const at = line.indexOf("="); if (at < 1) continue; const key = line.slice(0, at).trim(); const value = line.slice(at + 1).trim().replace(/^['"]|['"]$/g, ""); if (!process.env[key]) process.env[key] = value; } }
 function getOverlays() { try { return JSON.parse(readFileSync(overlaysPath, "utf8")); } catch { return []; } }
-function saveOverlays(overlays) { mkdirSync(join(root, "data"), { recursive: true }); writeFileSync(overlaysPath, `${JSON.stringify(overlays, null, 2)}\n`, "utf8"); }
+function saveOverlays(overlays) { mkdirSync(join(userDataRoot, "data"), { recursive: true }); writeFileSync(overlaysPath, `${JSON.stringify(overlays, null, 2)}\n`, "utf8"); }
 function safeOverlay(overlay) { return { id: overlay.id, name: overlay.name, layout: overlay.layout || "grid", theme: { accent: overlay.theme?.accent || "#ffd34e", background: overlay.theme?.background || "#0d1119", opacity: overlay.theme?.opacity || 96, columns: overlay.theme?.columns || 10 }, gameId: overlay.gameId, gameTitle: overlay.gameTitle, gameIcon: overlay.gameIcon, consoleName: overlay.consoleName }; }
 async function readJson(request) { let body = ""; for await (const chunk of request) body += chunk; return JSON.parse(body || "{}"); }
 function broadcast(type, payload) { const message = `event: ${type}\ndata: ${JSON.stringify(payload)}\n\n`; for (const response of clients) response.write(message); }
