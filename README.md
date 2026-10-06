@@ -1,6 +1,6 @@
 # RetroUnlock Live
 
-**RetroAchievements overlays for OBS** — free and open source.
+**RetroAchievements overlays for OBS** free and open source.
 
 Live unlock alerts, achievement icon grids, and a local Companion that runs on your PC. Your RetroAchievements API key never leaves your machine.
 
