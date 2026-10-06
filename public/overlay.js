@@ -37,7 +37,7 @@ function show(achievement) {
   card.className = "achievement-card overlay-card enter";
   playAlertSound();
   clearTimeout(hideTimer);
-  hideTimer = setTimeout(() => card.classList.add("hidden"), 9000);
+  hideTimer = setTimeout(() => card.classList.add("hidden"), 5000);
 }
 const overlayId = new URLSearchParams(location.search).get("id");
 let overlay = null;
