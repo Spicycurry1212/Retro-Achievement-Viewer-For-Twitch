@@ -1,9 +1,10 @@
-const { app, BrowserWindow, Menu, shell, dialog } = require("electron");
+const { app, BrowserWindow, Menu, shell } = require("electron");
 const { existsSync, mkdirSync, writeFileSync } = require("node:fs");
 const { join } = require("node:path");
-const { pathToFileURL } = require("node:url");
+const { spawn } = require("node:child_process");
 
 let window;
+let server;
 const port = Number(process.env.RETROUNLOCK_PORT || 17382);
 
 function ensureUserConfig() {
@@ -23,16 +24,14 @@ function ensureUserConfig() {
   return dataDir;
 }
 
-async function startServer() {
+function startServer() {
   const dataDir = ensureUserConfig();
   const appRoot = app.getAppPath();
-  // Loading the server inside Electron's main process is reliable in packaged
-  // Windows builds. Spawning the packaged Electron binary with
-  // ELECTRON_RUN_AS_NODE can silently fail, leaving the UI without its API.
-  process.env.RETROUNLOCK_APP_ROOT = appRoot;
-  process.env.RETROUNLOCK_DATA_DIR = dataDir;
-  process.env.PORT = String(port);
-  await import(pathToFileURL(join(appRoot, "server.js")).href);
+  server = spawn(process.execPath, [join(appRoot, "server.js")], {
+    env: { ...process.env, ELECTRON_RUN_AS_NODE: "1", RETROUNLOCK_APP_ROOT: appRoot, RETROUNLOCK_DATA_DIR: dataDir, PORT: String(port) },
+    stdio: "ignore",
+    windowsHide: true,
+  });
 }
 
 function createWindow() {
@@ -54,15 +53,9 @@ function setLanguage(language) {
   window.webContents.executeJavaScript(`localStorage.setItem("retrounlock-language", "${language}"); location.reload();`);
 }
 
-app.whenReady().then(async () => {
-  try {
-    await startServer();
-  } catch (error) {
-    dialog.showErrorBox("RetroUnlock could not start", `The local server failed to start.\n\n${error.message}`);
-    app.quit();
-    return;
-  }
-  createWindow();
+app.whenReady().then(() => {
+  startServer();
+  setTimeout(createWindow, 800);
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     { label: "RetroUnlock", submenu: [
       { label: "Open configuration folder / Ouvrir le dossier de configuration", click: () => shell.openPath(app.getPath("userData")) },
@@ -76,3 +69,4 @@ app.whenReady().then(async () => {
 });
 
 app.on("window-all-closed", () => app.quit());
+app.on("before-quit", () => { if (server && !server.killed) server.kill(); });
