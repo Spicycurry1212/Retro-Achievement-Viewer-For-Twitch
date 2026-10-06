@@ -168,6 +168,14 @@ Everything listens on `127.0.0.1` only.
 
 > This is an independent community project and is not affiliated with RetroAchievements.
 
+## Support the project
+
+RetroUnlock Live is free and open source. If it helps your stream, you can support development on Ko-fi:
+
+**[ko-fi.com/romhackpatcher](https://ko-fi.com/romhackpatcher)** ☕
+
+Donations are optional — the app stays free.
+
 ## Project status
 
 **Waiting for feedback.** Early prototype under active development. Please open issues for bugs, ideas, or feature requests.
