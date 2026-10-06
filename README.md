@@ -174,7 +174,7 @@ RetroUnlock Live is free and open source. If it helps your stream, you can suppo
 
 **[ko-fi.com/romhackpatcher](https://ko-fi.com/romhackpatcher)** ☕
 
-Donations are optional — the app stays free.
+Donations are optional the app stays free.
 
 ## Project status
 
