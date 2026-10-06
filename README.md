@@ -4,6 +4,17 @@
 
 RetroUnlock Live is a small self-hosted companion app for streamers. Choose one of your recent RetroAchievements games, create an overlay, and add its unique browser-source URL to OBS.
 
+## See it in action
+
+<p align="center">
+  <img src="docs/images/dashboard.png" alt="RetroUnlock Live dashboard" width="760" />
+</p>
+
+<p align="center">
+  <img src="docs/images/create-overlay.png" alt="Create a RetroAchievements OBS overlay" width="48%" />
+  <img src="docs/images/obs-browser-source.png" alt="RetroUnlock overlay in OBS" width="48%" />
+</p>
+
 **New user?** Read the complete [Windows installation guide](INSTALLATION.md).
 
 > This is an independent community project and is not affiliated with RetroAchievements.
