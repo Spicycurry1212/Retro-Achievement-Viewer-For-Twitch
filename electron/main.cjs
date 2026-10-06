@@ -41,7 +41,7 @@ function createWindow() {
     minWidth: 980,
     minHeight: 720,
     backgroundColor: "#0a0910",
-    autoHideMenuBar: true,
+    autoHideMenuBar: false,
     webPreferences: { contextIsolation: true, nodeIntegration: false },
   });
   window.loadURL(`http://127.0.0.1:${port}`);

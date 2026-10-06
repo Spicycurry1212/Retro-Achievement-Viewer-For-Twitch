@@ -34,7 +34,7 @@ Treat this key like a password. RetroUnlock does not need you to give it to the 
 
 ## 3. Configure the Companion
 
-1. In the Companion window, open the top menu: **RetroUnlock → Open configuration folder**.
+1. In the **RetroUnlock Companion desktop app** (not the website in your browser), open the visible top menu: **RetroUnlock → Open configuration folder**.
 2. Open the `.env` file with Notepad.
 3. Fill in only the two empty values below. Keep the names on the left unchanged:
 
