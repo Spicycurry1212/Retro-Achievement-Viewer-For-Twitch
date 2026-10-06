@@ -5,7 +5,7 @@ const { spawn } = require("node:child_process");
 
 let window;
 let server;
-const port = Number(process.env.RETROUNLOCK_PORT || 3000);
+const port = Number(process.env.RETROUNLOCK_PORT || 17382);
 
 function ensureUserConfig() {
   const dataDir = app.getPath("userData");

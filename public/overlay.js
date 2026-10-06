@@ -22,7 +22,8 @@ async function connect() {
     const achievement = JSON.parse(event.data);
     if (overlay.gameId === null || overlay.gameId === achievement.gameId) show(achievement);
   };
+  const showTestAlert = event => show(JSON.parse(event.data));
   events.addEventListener("unlock", showAlert);
-  events.addEventListener("test-unlock", showAlert);
+  events.addEventListener("test-unlock", showTestAlert);
 }
 connect();
