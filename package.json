@@ -1,0 +1,14 @@
+{
+  "name": "retrounlock-live",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "RetroAchievements live overlay for OBS",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
