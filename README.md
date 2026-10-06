@@ -1,21 +1,53 @@
 # RetroUnlock Live
 
-**RetroAchievements overlays for OBS — live unlock alerts, completion progress, and achievement icon grids.**
+<p align="center">
+  <strong>RetroAchievements overlays made for OBS.</strong><br />
+  Live unlock alerts, persistent achievement grids, and a local-first Companion for streamers.
+</p>
 
-RetroUnlock Live is a small self-hosted companion app for streamers. Choose one of your recent RetroAchievements games, create an overlay, and add its unique browser-source URL to OBS.
+<p align="center">
+  <a href="#get-started">Get started</a> &nbsp;•&nbsp;
+  <a href="#see-it-in-action">Product tour</a> &nbsp;•&nbsp;
+  <a href="INSTALLATION.md">Windows installation</a>
+</p>
+
+> [!TIP]
+> Your RetroAchievements API key stays on your own PC. RetroUnlock Live runs locally and gives OBS a private browser-source URL.
 
 ## See it in action
 
-<p align="center">
-  <img src="docs/images/dashboard.png" alt="RetroUnlock Live dashboard" width="760" />
-</p>
+### Your stream dashboard
 
 <p align="center">
-  <img src="docs/images/create-overlay.png" alt="Create a RetroAchievements OBS overlay" width="48%" />
-  <img src="docs/images/obs-browser-source.png" alt="RetroUnlock overlay in OBS" width="48%" />
+  <img src="docs/images/dashboard.png" alt="RetroUnlock Live dashboard showing a connected streamer profile" width="900" />
 </p>
 
-**New user?** Read the complete [Windows installation guide](INSTALLATION.md).
+Connect once, pick a recent game, then create as many grid or alert overlays as your scenes need.
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>1. Build an overlay</strong><br />
+      Choose a game, a layout, colours, opacity, grid columns, and an optional local alert sound.<br /><br />
+      <img src="docs/images/create-overlay.png" alt="Overlay creator with game selection and customisation controls" width="100%" />
+    </td>
+    <td width="50%" valign="top">
+      <strong>2. Bring it into OBS</strong><br />
+      Paste the generated local URL into an OBS Browser source. The grid and alert update while you stream.<br /><br />
+      <img src="docs/images/obs-browser-source.png" alt="RetroUnlock overlay displayed in OBS" width="100%" />
+    </td>
+  </tr>
+</table>
+
+## How it works
+
+| 1. Connect | 2. Personalise | 3. Stream |
+| --- | --- | --- |
+| Configure the local Companion with your RetroAchievements account. | Select a game and create an icon grid or a live alert in seconds. | Add its URL as an OBS Browser source and let it refresh automatically. |
+
+<a id="get-started"></a>
+
+**Ready to try it?** Follow the [complete Windows installation guide](INSTALLATION.md).
 
 > This is an independent community project and is not affiliated with RetroAchievements.
 
