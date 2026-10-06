@@ -1,0 +1,5 @@
+/* Loaded directly by index.html: dashboard styling must not depend on app.js. */
+html { background:#090b10; }
+body.dashboard { margin:0; min-width:0; color:#eef3f8; font-family:'Space Grotesk',Inter,Arial,sans-serif; }
+body.dashboard *, body.dashboard *::before, body.dashboard *::after { box-sizing:border-box; }
+body.dashboard button, body.dashboard input, body.dashboard select { font:inherit; }
