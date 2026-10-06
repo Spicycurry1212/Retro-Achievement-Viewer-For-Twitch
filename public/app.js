@@ -1,4 +1,4 @@
-document.head.insertAdjacentHTML("beforeend", '<link rel="stylesheet" href="/modern.css"><link rel="stylesheet" href="/preview.css"><link rel="stylesheet" href="/customizer.css"><link rel="stylesheet" href="/alert-preview.css">');
+document.head.insertAdjacentHTML("beforeend", '<link rel="stylesheet" href="/modern.css"><link rel="stylesheet" href="/preview.css"><link rel="stylesheet" href="/customizer.css"><link rel="stylesheet" href="/alert-preview.css">');const pipelineScript=document.createElement("script");pipelineScript.src="/pipeline.js";document.head.append(pipelineScript);
 const $ = (selector) => document.querySelector(selector);
 const { t, lang, set } = window.RetroI18n;
 const demo = { title:t("testTitle"), description:t("testDescription"), points:5, trueRatio:18.4, hardcore:true, gameTitle:"Super Mario World", badgeUrl:"https://retroachievements.org/Badge/000001.png" };
