@@ -6,7 +6,7 @@ Live unlock alerts, achievement icon grids, and a local Companion that runs on y
 
 - **Download:** [romhackpatcher.com/tools/retro-unlock](https://romhackpatcher.com/tools/retro-unlock)
 - **License:** PolyForm Noncommercial 1.0.0 (see [LICENSE](LICENSE))
-- **Status:** Waiting for feedback — early prototype, active development
+- **Status:** Waiting for feedback. early prototype, active development
 
 ## What you get
 
