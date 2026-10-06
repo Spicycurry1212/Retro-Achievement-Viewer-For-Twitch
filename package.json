@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "RetroAchievements live overlay for OBS",
+  "description": "Live RetroAchievements overlays for OBS: alerts, progress, and achievement grids.",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js"
