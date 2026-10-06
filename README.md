@@ -151,7 +151,7 @@ First launch: **RetroUnlock → Open configuration folder**, edit `.env`, restar
 6. Optional: enable **Refresh browser when scene becomes active**.
 7. **OK**, move/resize the source, and keep the Companion running.
 
-**Test:** click **Test animation** / **Tester l’alerte OBS** in the Companion — it should appear in OBS right away.
+**Test:** click **Test animation** / **Tester l’alerte OBS** in the Companion it should appear in OBS right away.
 
 ---
 
