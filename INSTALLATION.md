@@ -60,6 +60,8 @@ PORT=3000
 4. Click **Create my overlay**.
 5. Copy the OBS link displayed on the overlay card.
 
+For a full stream layout, create **two overlays for the same game**: one **Icon Grid** and one **Live Alert**. They are two separate OBS Browser Sources. The grid stays visible; the alert appears only when an achievement is unlocked.
+
 ## 5. Add it to OBS
 
 1. Open OBS and select the scene where the overlay should appear.
@@ -73,6 +75,8 @@ PORT=3000
 7. Click **OK**, then move and resize the overlay in your OBS preview.
 
 Leave RetroUnlock Companion open while you stream. The overlay uses your local Companion, so it must remain running to check for new achievements.
+
+Add the Icon Grid and Live Alert URLs as separate Browser Sources in the same OBS scene. Place the alert where you want the popup to appear.
 
 ## 6. Test before going live
 

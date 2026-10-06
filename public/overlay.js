@@ -17,9 +17,11 @@ async function connect() {
   overlay = (await response.json()).overlay;
   help.remove();
   const events = new EventSource("/api/events");
-  events.addEventListener("unlock", event => {
+  const showAlert = event => {
     const achievement = JSON.parse(event.data);
     if (overlay.gameId === null || overlay.gameId === achievement.gameId) show(achievement);
-  });
+  };
+  events.addEventListener("unlock", showAlert);
+  events.addEventListener("test-unlock", showAlert);
 }
 connect();
