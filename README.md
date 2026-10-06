@@ -1,94 +1,89 @@
 # RetroUnlock Live
 
-<p align="center">
-  <strong>RetroAchievements overlays made for OBS.</strong><br />
-  Live unlock alerts, persistent achievement grids, and a local-first Companion for streamers.
-</p>
+**RetroAchievements overlays for OBS** — free and open source.
+
+Live unlock alerts, achievement icon grids, and a local Companion that runs on your PC. Your RetroAchievements API key never leaves your machine.
+
+- **Download:** [romhackpatcher.com/tools/retro-unlock](https://romhackpatcher.com/tools/retro-unlock)
+- **License:** PolyForm Noncommercial 1.0.0 (see [LICENSE](LICENSE))
+- **Status:** Waiting for feedback — early prototype, active development
+
+## What you get
+
+| Overlay | What it shows |
+| --- | --- |
+| **Icon Grid** | Badges, progress bar, locked icons, points, next achievement |
+| **Live Alert** | Popup + optional sound when an achievement unlocks |
+
+Hardcore / softcore borders, custom colours, opacity, grid columns, multiple overlays per game.
+
+### Dashboard
 
 <p align="center">
-  <a href="#get-started">Get started</a> &nbsp;•&nbsp;
-  <a href="#see-it-in-action">Product tour</a> &nbsp;•&nbsp;
-  <a href="INSTALLATION.md">Windows installation</a>
+  <img src="docs/images/dashboard.png" alt="RetroUnlock Live dashboard with connected RetroAchievements profile" width="900" />
 </p>
 
-> [!TIP]
-> Your RetroAchievements API key stays on your own PC. RetroUnlock Live runs locally and gives OBS a private browser-source URL.
-
-## See it in action
-
-### Your stream dashboard
-
-<p align="center">
-  <img src="docs/images/dashboard.png" alt="RetroUnlock Live dashboard showing a connected streamer profile" width="900" />
-</p>
-
-Connect once, pick a recent game, then create as many grid or alert overlays as your scenes need.
+### Create an overlay → use it in OBS
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <strong>1. Build an overlay</strong><br />
-      Choose a game, a layout, colours, opacity, grid columns, and an optional local alert sound.<br /><br />
-      <img src="docs/images/create-overlay.png" alt="Overlay creator with game selection and customisation controls" width="100%" />
+      <img src="docs/images/create-overlay.png" alt="Overlay creator with game selection and style options" width="100%" />
     </td>
     <td width="50%" valign="top">
-      <strong>2. Bring it into OBS</strong><br />
-      Paste the generated local URL into an OBS Browser source. The grid and alert update while you stream.<br /><br />
-      <img src="docs/images/obs-browser-source.png" alt="RetroUnlock overlay displayed in OBS" width="100%" />
+      <img src="docs/images/obs-browser-source.png" alt="RetroUnlock overlay running inside OBS" width="100%" />
     </td>
   </tr>
 </table>
 
-## How it works
-
-| 1. Connect | 2. Personalise | 3. Stream |
-| --- | --- | --- |
-| Configure the local Companion with your RetroAchievements account. | Select a game and create an icon grid or a live alert in seconds. | Add its URL as an OBS Browser source and let it refresh automatically. |
-
-<a id="get-started"></a>
-
-**Ready to try it?** Follow the [complete Windows installation guide](INSTALLATION.md).
-
-> This is an independent community project and is not affiliated with RetroAchievements.
-
-## Features
-
-- Live achievement alerts for OBS
-- Achievement icon grid with progress bar, locked icons, point values, and the next achievement to unlock
-- Hardcore and softcore completion indicators (gold and silver borders)
-- Multiple overlays and games per profile
-- Custom accent colour, card background, opacity, and grid column count
-- Live updates using Server-Sent Events after the configured check interval
-- Server-side caching for game lists and achievement grids, with instant grid invalidation after a detected unlock
-- Local-first design: your RetroAchievements API key stays in your `.env` file and is never sent to a public frontend
+---
 
 ## Setup guide (Windows)
 
-### Before you begin
+### Before you need
 
-You need:
+- **Windows 10/11**
+- A **RetroAchievements** account
+- Your **Web API key** (RetroAchievements → account settings → Web API)
+- **OBS Studio** (only if you stream with overlays)
+- **Node.js 20+** (LTS) — only if you run from source instead of the Windows app
 
-- [Node.js](https://nodejs.org/) 20 or newer — install the **LTS** version.
-- A RetroAchievements account.
-- Your RetroAchievements **Web API key** from your account settings.
-- OBS Studio, if you want to use the overlays while streaming.
+---
 
-### 1. Download the project
+### Option A — Windows app (recommended)
 
-On GitHub, click **Code → Download ZIP**. Extract the ZIP somewhere simple, for example `C:\RetroUnlock-Live`.
+1. Download **RetroUnlock Companion** from [romhackpatcher.com/tools/retro-unlock](https://romhackpatcher.com/tools/retro-unlock)  
+   *(The download button asks for Google sign-in; the product page does not.)*
+2. Extract the ZIP, e.g. to `C:\RetroUnlock`.
+3. Run **RetroUnlock Companion.exe**.
+4. Click **Configurer l’API** / **Configure API**.
+5. Enter your RetroAchievements **username** and **Web API key**, then save.
+6. Wait until the status shows **connected**. Your recent games appear in the dashboard.
 
-Alternatively, if you use Git:
+Keep the Companion open while you stream.
+
+---
+
+### Option B — Run from source
+
+#### 1. Get the project
+
+On GitHub: **Code → Download ZIP**, extract it (e.g. `C:\RetroUnlock-Live`), or:
 
 ```powershell
 git clone https://github.com/YOUR-USERNAME/retrounlock-live.git
 cd retrounlock-live
 ```
 
-### 2. Create your private configuration file
+#### 2. Install
 
-Open the project folder. Copy `.env.example` and rename the copy to `.env`.
+```powershell
+npm install
+```
 
-Open `.env` in Notepad and fill in your details:
+#### 3. Configure
+
+Copy `.env.example` to `.env` and open it in Notepad:
 
 ```env
 RETROACHIEVEMENTS_USERNAME=YourRetroAchievementsUsername
@@ -97,76 +92,94 @@ POLL_INTERVAL_MS=10000
 PORT=3000
 ```
 
-Do **not** share, commit, or upload `.env`. It contains your private API key and is already ignored by Git.
+| Variable | Meaning |
+| --- | --- |
+| `RETROACHIEVEMENTS_USERNAME` | Your RA username |
+| `RETROACHIEVEMENTS_API_KEY` | Your RA Web API key (private — do not share) |
+| `POLL_INTERVAL_MS` | How often to check unlocks (default 10000 = 10s, minimum 5000) |
+| `PORT` | Local dashboard port (default 3000) |
 
-`POLL_INTERVAL_MS=10000` checks for unlocks every 10 seconds. You can increase it if you prefer fewer checks.
-
-### 3. Start RetroUnlock Live
-
-In the project folder, right-click and choose **Open in Terminal**. Run:
+#### 4. Start
 
 ```powershell
 npm start
 ```
 
-Leave that terminal window open while you stream. When it says the server is ready, open:
+Leave the terminal open. Open:
 
 ```text
 http://localhost:3000
 ```
 
-If you chose a different `PORT` in `.env`, replace `3000` with that number.
+(Use your `PORT` if you changed it.)
 
-### 4. Create your overlay
+---
 
-1. In RetroUnlock Live, pick one of your recent RetroAchievements games.
-2. Choose **Icon Grid** for progress or **Live Alert** for achievement popups.
-3. Adjust the colours, opacity, and number of columns.
-4. Click **Create my overlay**.
-5. Copy the OBS URL shown on the new overlay card.
-
-## Add an overlay to OBS
-
-1. In OBS, open the scene where you want the overlay.
-2. Under **Sources**, click **+** then select **Browser**.
-3. Name it, for example `RetroAchievements Grid`, and click **OK**.
-4. Paste the copied overlay URL into the **URL** field.
-5. For an icon grid, begin with **1100 × 750**. For an alert, try **800 × 250**.
-6. Enable **Refresh browser when scene becomes active** if you want OBS to reload it when changing scenes.
-7. Click **OK**, move and resize the source in OBS, then keep RetroUnlock Live running while you stream.
-
-To test it, use the **Test animation** button in RetroUnlock Live. It should appear immediately in OBS.
-
-## Windows Companion build
-
-RetroUnlock Live can also be packaged as a Windows desktop application. The desktop version starts the local service and opens the dashboard automatically.
+### Build the Windows app yourself
 
 ```powershell
 npm install
 npm run build:win
 ```
 
-The Windows executable is created in the build output folder. Its private `.env` and overlay data are stored in the Windows user profile, outside the application folder and outside Git. This means an update or a reinstall does not place the API key inside the downloadable application.
+The `.exe` is written to the build output folder. Private `.env` and overlay data are stored in your Windows user profile — not inside the app folder — so reinstalling does not ship your API key inside the package.
 
-The first time the Companion starts, open **RetroUnlock → Open configuration folder**, edit the generated `.env`, then restart the app.
+First launch: **RetroUnlock → Open configuration folder**, edit `.env`, restart the app.
 
-The icon grid automatically refreshes when a new unlock is detected. The alert overlay appears when the local service detects the unlock during its next check.
+---
 
-## Security and publishing this repository
+## Create an overlay
 
-Your real API key must only exist in your local `.env` file:
+1. Open the dashboard (`http://localhost:3000` or the Companion app).
+2. Pick one of your **recent RetroAchievements games**.
+3. Choose **Icon Grid** (progress) or **Live Alert** (popup on unlock).
+4. Set name, colours, opacity, columns, optional alert sound.
+5. Click **Create my overlay**.
+6. On the new card, **copy the overlay URL**.
 
-- `.env` is ignored by Git and must never be committed.
-- Use `.env.example` as the template for contributors.
-- Never put API keys in browser JavaScript, screenshots, issues, or public config files.
-- If a key is ever pasted publicly, regenerate it in RetroAchievements before using the app again.
+---
 
-This repository can be public as long as the rules above are followed. For a hosted multi-user version, each user's API key should remain in a locally installed companion app rather than being collected by the website.
+## Add the overlay to OBS
+
+1. Open the OBS scene you want.
+2. **Sources → + → Browser**.
+3. Name it (e.g. `RetroAchievements Grid`) → **OK**.
+4. Paste the overlay URL into the **URL** field.
+5. Suggested size:
+   - Icon Grid: **1100 × 750**
+   - Live Alert: **800 × 250**
+6. Optional: enable **Refresh browser when scene becomes active**.
+7. **OK**, move/resize the source, and keep the Companion running.
+
+**Test:** click **Test animation** / **Tester l’alerte OBS** in the Companion — it should appear in OBS right away.
+
+---
+
+## How it works
+
+1. The Companion polls the RetroAchievements API for your unlocks (every `POLL_INTERVAL_MS`).
+2. New unlocks are pushed to OBS Browser sources over a **local** connection (Server-Sent Events).
+3. Grids refresh a few seconds after an unlock so badges update.
+4. Game lists and grids are cached on your machine for speed.
+
+Everything listens on `127.0.0.1` only.
+
+---
+
+> This is an independent community project and is not affiliated with RetroAchievements.
 
 ## Project status
 
-This is an early prototype under active development. Feedback and issues are welcome.
+**Waiting for feedback.** Early prototype under active development. Please open issues for bugs, ideas, or feature requests.
 
 ## License
 
-No license has been selected yet. Do not reuse or redistribute the code until a license is added.
+This project is licensed under the **PolyForm Noncommercial License 1.0.0**.
+
+You may use, modify, and redistribute this software for **noncommercial** purposes, subject to the terms of the license.
+
+**Commercial use is not permitted** without a separate commercial license or written permission from the copyright holder.
+
+Copyright © 2026 Charles Dionne.
+
+Full license text: [LICENSE](LICENSE) · <https://polyformproject.org/licenses/noncommercial/1.0.0>
