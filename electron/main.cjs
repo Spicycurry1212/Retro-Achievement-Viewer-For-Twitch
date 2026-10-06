@@ -48,13 +48,22 @@ function createWindow() {
   window.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: "deny" }; });
 }
 
+function setLanguage(language) {
+  if (!window || window.isDestroyed()) return;
+  window.webContents.executeJavaScript(`localStorage.setItem("retrounlock-language", "${language}"); location.reload();`);
+}
+
 app.whenReady().then(() => {
   startServer();
   setTimeout(createWindow, 800);
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     { label: "RetroUnlock", submenu: [
-      { label: "Open configuration folder", click: () => shell.openPath(app.getPath("userData")) },
-      { role: "quit", label: "Quit RetroUnlock" },
+      { label: "Open configuration folder / Ouvrir le dossier de configuration", click: () => shell.openPath(app.getPath("userData")) },
+      { label: "Language / Langue", submenu: [
+        { label: "English", click: () => setLanguage("en") },
+        { label: "Français", click: () => setLanguage("fr") },
+      ] },
+      { role: "quit", label: "Quit RetroUnlock / Quitter RetroUnlock" },
     ] },
   ]));
 });
