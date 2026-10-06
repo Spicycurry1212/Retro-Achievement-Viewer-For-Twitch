@@ -16,6 +16,7 @@ RetroUnlock Live is a small self-hosted companion app for streamers. Choose one 
 - Multiple overlays and games per profile
 - Custom accent colour, card background, opacity, and grid column count
 - Live updates using Server-Sent Events after the configured check interval
+- Server-side caching for game lists and achievement grids, with instant grid invalidation after a detected unlock
 - Local-first design: your RetroAchievements API key stays in your `.env` file and is never sent to a public frontend
 
 ## Setup guide (Windows)
