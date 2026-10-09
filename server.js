@@ -19,7 +19,8 @@ function saveSound(input) { const types = { "audio/mpeg":"mp3", "audio/mp3":"mp3
 function saveConfiguration({ username, apiKey }) { const safeUsername = String(username || "").trim(); const safeApiKey = String(apiKey || "").trim(); if (!/^[A-Za-z0-9_-]{1,50}$/.test(safeUsername) || !/^[A-Za-z0-9]+$/.test(safeApiKey)) throw new Error("Nom d’utilisateur ou clé API invalide."); writeFileSync(join(userDataRoot, ".env"), `RETROACHIEVEMENTS_API_KEY=${safeApiKey}\nRETROACHIEVEMENTS_USERNAME=${safeUsername}\nPOLL_INTERVAL_MS=${config.pollMs}\nPORT=${config.port}\n`, "utf8"); config.apiKey = safeApiKey; config.username = safeUsername; gamesCache = { value: [], expiresAt: 0 }; gridCache.clear(); seen.clear(); latest = null; status = "connecting"; startPolling(); }
 function getOverlays() { try { return JSON.parse(readFileSync(overlaysPath, "utf8")); } catch { return []; } }
 function saveOverlays(overlays) { mkdirSync(join(userDataRoot, "data"), { recursive: true }); writeFileSync(overlaysPath, `${JSON.stringify(overlays, null, 2)}\n`, "utf8"); }
-function safeOverlay(overlay) { return { id: overlay.id, name: overlay.name, layout: overlay.layout || "grid", theme: { accent: overlay.theme?.accent || "#ffd34e", background: overlay.theme?.background || "#0d1119", opacity: overlay.theme?.opacity || 96, columns: overlay.theme?.columns || 10, soundVolume: Math.max(0, Math.min(100, Number(overlay.theme?.soundVolume) ?? 70)), soundFile: /^[a-f0-9-]+\.(mp3|wav|ogg)$/i.test(overlay.theme?.soundFile || "") ? overlay.theme.soundFile : "" }, gameId: overlay.gameId, gameTitle: overlay.gameTitle, gameIcon: overlay.gameIcon, consoleName: overlay.consoleName }; }
+function scrollSpeed(value) { const speed = Number(value); return Number.isFinite(speed) && speed > 0 ? Math.max(4, Math.min(60, Math.round(speed))) : 14; }
+function safeOverlay(overlay) { return { id: overlay.id, name: overlay.name, layout: overlay.layout || "grid", theme: { accent: overlay.theme?.accent || "#ffd34e", background: overlay.theme?.background || "#0d1119", opacity: overlay.theme?.opacity || 96, columns: overlay.theme?.columns || 10, scrollSpeed: scrollSpeed(overlay.theme?.scrollSpeed), soundVolume: Math.max(0, Math.min(100, Number(overlay.theme?.soundVolume) ?? 70)), soundFile: /^[a-f0-9-]+\.(mp3|wav|ogg)$/i.test(overlay.theme?.soundFile || "") ? overlay.theme.soundFile : "" }, gameId: overlay.gameId, gameTitle: overlay.gameTitle, gameIcon: overlay.gameIcon, consoleName: overlay.consoleName }; }
 async function readJson(request) { let body = ""; for await (const chunk of request) body += chunk; return JSON.parse(body || "{}"); }
 function broadcast(type, payload) { const message = `event: ${type}\ndata: ${JSON.stringify(payload)}\n\n`; for (const response of clients) response.write(message); }
 function publicAchievement(item) { return { id: item.AchievementID, gameId: item.GameID, title: item.Title, description: item.Description, points: item.Points, trueRatio: item.TrueRatio, hardcore: Boolean(item.HardcoreMode), gameTitle: item.GameTitle, consoleName: item.ConsoleName, badgeUrl: item.BadgeURL ? `https://retroachievements.org${item.BadgeURL}` : "", gameIcon: item.GameIcon ? `https://retroachievements.org${item.GameIcon}` : "", unlockedAt: item.Date }; }
@@ -55,13 +56,52 @@ const server = createServer(async (request, response) => {
   if (url.pathname === "/api/games" && request.method === "GET") { try { response.writeHead(200, { "Content-Type": "application/json" }); response.end(JSON.stringify({ games: await fetchGames(url.searchParams.get("refresh")==="1") })); } catch (error) { response.writeHead(502, { "Content-Type": "application/json" }); response.end(JSON.stringify({ error: error.message })); } return; }
   if (url.pathname === "/api/preview-grid" && request.method === "GET") { const gameId=Number(url.searchParams.get("gameId")); if(!Number.isInteger(gameId)||gameId<1){response.writeHead(400).end("Jeu invalide");return} try { response.writeHead(200,{"Content-Type":"application/json"});response.end(JSON.stringify({grid:await fetchGrid(gameId, url.searchParams.has("refresh"))})); } catch(error) { response.writeHead(502,{"Content-Type":"application/json"});response.end(JSON.stringify({error:error.message})); } return; }
   if (url.pathname === "/api/overlays" && request.method === "GET") { response.writeHead(200, { "Content-Type": "application/json" }); response.end(JSON.stringify({ overlays: getOverlays().map(safeOverlay) })); return; }
-  if (url.pathname === "/api/overlays" && request.method === "POST") { try { const input = await readJson(request); const gameId = Number(input.gameId); if (!Number.isInteger(gameId) || gameId < 1) throw new Error("Jeu invalide"); const color=(value,fallback)=>/^#[0-9a-f]{6}$/i.test(value||"")?value:fallback; const soundFile=/^[a-f0-9-]+\.(mp3|wav|ogg)$/i.test(input.theme?.soundFile||"")?input.theme.soundFile:""; const overlay = { id: crypto.randomUUID().slice(0, 8), name: String(input.name || "Mon overlay").trim().slice(0, 48) || "Mon overlay", layout: input.layout === "alert" ? "alert" : "grid", theme:{accent:color(input.theme?.accent,"#ffd34e"),background:color(input.theme?.background,"#0d1119"),opacity:Math.max(55,Math.min(100,Number(input.theme?.opacity)||96)),columns:Math.max(3,Math.min(12,Number(input.theme?.columns)||10)),soundVolume:Math.max(0,Math.min(100,Number(input.theme?.soundVolume) ?? 70)),soundFile}, gameId, gameTitle: String(input.gameTitle || "").slice(0, 120), gameIcon: String(input.gameIcon || "").slice(0, 300), consoleName: String(input.consoleName || "").slice(0, 80) }; const overlays = getOverlays(); overlays.push(overlay); saveOverlays(overlays); response.writeHead(201, { "Content-Type": "application/json" }); response.end(JSON.stringify({ overlay: safeOverlay(overlay) })); } catch (error) { response.writeHead(400, { "Content-Type": "application/json" }); response.end(JSON.stringify({ error:error.message })); } return; }
+  if (url.pathname === "/api/overlays" && request.method === "POST") { try { const input = await readJson(request); const gameId = Number(input.gameId); if (!Number.isInteger(gameId) || gameId < 1) throw new Error("Jeu invalide"); const color=(value,fallback)=>/^#[0-9a-f]{6}$/i.test(value||"")?value:fallback; const soundFile=/^[a-f0-9-]+\.(mp3|wav|ogg)$/i.test(input.theme?.soundFile||"")?input.theme.soundFile:""; const overlay = { id: crypto.randomUUID().slice(0, 8), name: String(input.name || "Mon overlay").trim().slice(0, 48) || "Mon overlay", layout: input.layout === "alert" ? "alert" : "grid", theme:{accent:color(input.theme?.accent,"#ffd34e"),background:color(input.theme?.background,"#0d1119"),opacity:Math.max(55,Math.min(100,Number(input.theme?.opacity)||96)),columns:Math.max(3,Math.min(12,Number(input.theme?.columns)||10)),scrollSpeed:scrollSpeed(input.theme?.scrollSpeed),soundVolume:Math.max(0,Math.min(100,Number(input.theme?.soundVolume) ?? 70)),soundFile}, gameId, gameTitle: String(input.gameTitle || "").slice(0, 120), gameIcon: String(input.gameIcon || "").slice(0, 300), consoleName: String(input.consoleName || "").slice(0, 80) }; const overlays = getOverlays(); overlays.push(overlay); saveOverlays(overlays); response.writeHead(201, { "Content-Type": "application/json" }); response.end(JSON.stringify({ overlay: safeOverlay(overlay) })); } catch (error) { response.writeHead(400, { "Content-Type": "application/json" }); response.end(JSON.stringify({ error:error.message })); } return; }
   const soundMatch = url.pathname.match(/^\/api\/sounds\/([a-f0-9-]+\.(?:mp3|wav|ogg))$/i);
   if (soundMatch && request.method === "GET") { const file = join(soundsPath, soundMatch[1]); if (!existsSync(file)) { response.writeHead(404).end(); return; } const type = extname(file) === ".mp3" ? "audio/mpeg" : extname(file) === ".ogg" ? "audio/ogg" : "audio/wav"; response.writeHead(200, { "Content-Type":type, "Cache-Control":"no-store" }); createReadStream(file).pipe(response); return; }
   const gridMatch = url.pathname.match(/^\/api\/overlays\/([a-z0-9-]+)\/grid$/i);
   if (gridMatch && request.method === "GET") { const overlay = getOverlays().find((item) => item.id === gridMatch[1]); if (!overlay) { response.writeHead(404).end("Overlay introuvable"); return; } try { response.writeHead(200, { "Content-Type":"application/json", "Cache-Control":"no-store" }); response.end(JSON.stringify({ grid:await fetchGrid(overlay.gameId, url.searchParams.has("refresh")), overlay:safeOverlay(overlay) })); } catch (error) { response.writeHead(502, { "Content-Type":"application/json" }); response.end(JSON.stringify({ error:error.message })); } return; }
   const match = url.pathname.match(/^\/api\/overlays\/([a-z0-9-]+)$/i);
-  if (match && request.method === "GET") { const overlay = getOverlays().find((item) => item.id === match[1]); if (!overlay) { response.writeHead(404).end("Overlay introuvable"); return; } response.writeHead(200, { "Content-Type": "application/json" }); response.end(JSON.stringify({ overlay: safeOverlay(overlay) })); return; }
+  if (match && request.method === "GET") { const overlay = getOverlays().find((item) => item.id === match[1]); if (!overlay) { response.writeHead(404).end("Overlay introuvable"); return; } response.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" }); response.end(JSON.stringify({ overlay: safeOverlay(overlay) })); return; }
+  if (match && request.method === "PATCH") { try {
+    const input = await readJson(request);
+    const overlays = getOverlays();
+    const overlay = overlays.find((item) => item.id === match[1]);
+    if (!overlay) { response.writeHead(404).end("Overlay introuvable"); return; }
+    if (Object.hasOwn(input, "scrollSpeed") && !Object.hasOwn(input, "theme")) {
+      const speed = Number(input.scrollSpeed);
+      if (overlay.layout === "alert" || !Number.isFinite(speed) || speed < 4 || speed > 60) throw new Error("Vitesse invalide");
+      overlay.theme = { ...overlay.theme, scrollSpeed: scrollSpeed(speed) };
+      saveOverlays(overlays);
+      broadcast("overlay-settings", { id: overlay.id, scrollSpeed: overlay.theme.scrollSpeed });
+    } else {
+      const gameId = Number(input.gameId);
+      if (!Number.isInteger(gameId) || gameId < 1) throw new Error("Jeu invalide");
+      if (input.layout !== overlay.layout) throw new Error("Le type d’overlay ne peut pas changer sans modifier le lien OBS.");
+      const color = (value, fallback) => /^#[0-9a-f]{6}$/i.test(value || "") ? value : fallback;
+      const theme = input.theme || {};
+      const soundFile = theme.soundFile === "" ? "" : /^[a-f0-9-]+\.(mp3|wav|ogg)$/i.test(theme.soundFile || "") ? theme.soundFile : overlay.theme?.soundFile || "";
+      overlay.name = String(input.name || "Mon overlay").trim().slice(0, 48) || "Mon overlay";
+      overlay.gameId = gameId;
+      overlay.gameTitle = String(input.gameTitle || "").slice(0, 120);
+      overlay.gameIcon = String(input.gameIcon || "").slice(0, 300);
+      overlay.consoleName = String(input.consoleName || "").slice(0, 80);
+      overlay.theme = {
+        ...overlay.theme,
+        accent: color(theme.accent, overlay.theme?.accent || "#ffd34e"),
+        background: color(theme.background, overlay.theme?.background || "#0d1119"),
+        opacity: Math.max(55, Math.min(100, Number(theme.opacity) || 96)),
+        columns: Math.max(3, Math.min(12, Number(theme.columns) || 10)),
+        scrollSpeed: scrollSpeed(theme.scrollSpeed),
+        soundVolume: Math.max(0, Math.min(100, Number(theme.soundVolume) || 0)),
+        soundFile
+      };
+      saveOverlays(overlays);
+      broadcast("overlay-updated", { id: overlay.id });
+    }
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(JSON.stringify({ overlay: safeOverlay(overlay) }));
+  } catch (error) { response.writeHead(400, { "Content-Type": "application/json" }); response.end(JSON.stringify({ error: error.message })); } return; }
   if (match && request.method === "DELETE") { const overlays = getOverlays(); const index = overlays.findIndex((item) => item.id === match[1]); if (index < 0) { response.writeHead(404).end("Overlay introuvable"); return; } overlays.splice(index, 1); saveOverlays(overlays); response.writeHead(204).end(); return; }
   const pathname = url.pathname === "/" ? "/index.html" : url.pathname; const file = normalize(join(root, "public", pathname)); if (!file.startsWith(join(root, "public")) || !existsSync(file)) { response.writeHead(404).end("Not found"); return; } response.writeHead(200, { "Content-Type": contentTypes[extname(file)] || "application/octet-stream", "Cache-Control": "no-cache" }); createReadStream(file).pipe(response);
 });

@@ -17,6 +17,15 @@ Live unlock alerts, achievement icon grids, and a local Companion that runs on y
 
 Hardcore / softcore borders, custom colours, opacity, grid columns, multiple overlays per game.
 
+When a game has multiple rows of badges, the icon grid continuously scrolls from top to bottom and back to the top, pausing briefly at each end so every badge can be seen without shrinking all badges to fit. A single row stays still. Adjust **Scroll speed** (4–60 px/s) when creating a grid, or use the slider on an existing grid in **My overlays**.
+
+### Recent additions
+
+- **Edit existing overlays:** change the name, game, colours, opacity, grid columns, scroll speed, alert volume, or custom sound. The overlay ID and OBS URL stay the same.
+- **Quick grid controls:** change columns (3–12) and scroll speed directly on the grid card in **My overlays**; these controls save immediately.
+- **OBS updates automatically:** grid and alert pages respond to saved edits. They also check their saved settings every few seconds in case OBS misses a live update.
+- **Compact editor preview:** changing the column count no longer enlarges preview badges enough to push the Save button far down the page.
+
 ### Dashboard
 
 <p align="center">
@@ -60,7 +69,7 @@ Hardcore / softcore borders, custom colours, opacity, grid columns, multiple ove
 5. Enter your RetroAchievements **username** and **Web API key**, then save.
 6. Wait until the status shows **connected**. Your recent games appear in the dashboard.
 
-Keep the Companion open while you stream.
+Keep the Companion open while you stream. When updating, close it, extract the new ZIP over your existing app folder, and reopen it. Your API configuration and overlays are stored in your Windows profile, so the existing OBS links remain valid.
 
 ---
 
@@ -133,9 +142,13 @@ First launch: **RetroUnlock → Open configuration folder**, edit `.env`, restar
 1. Open the dashboard (`http://localhost:3000` or the Companion app).
 2. Pick one of your **recent RetroAchievements games**.
 3. Choose **Icon Grid** (progress) or **Live Alert** (popup on unlock).
-4. Set name, colours, opacity, columns, optional alert sound.
+4. Set name, colours, opacity, columns, grid scroll speed, and optional alert sound.
 5. Click **Create my overlay**.
 6. On the new card, **copy the overlay URL**.
+
+To change an existing grid or alert, click **Edit / Modifier** on its card, adjust the game or appearance, then click **Save changes / Enregistrer les modifications**. The overlay keeps its ID and OBS URL. Open OBS sources update automatically; you do not need to paste the link again. The overlay type stays the same because grids and alerts use different page URLs.
+
+For an existing grid, the **Columns / Colonnes** selector and **Scroll speed / Vitesse de défilement** slider on its library card save immediately. You do not need to open the full editor for these two settings. The editor's game preview shows only the first 12 badges; the OBS grid loads the full achievement list.
 
 ---
 
@@ -161,8 +174,18 @@ First launch: **RetroUnlock → Open configuration folder**, edit `.env`, restar
 2. New unlocks are pushed to OBS Browser sources over a **local** connection (Server-Sent Events).
 3. Grids refresh a few seconds after an unlock so badges update.
 4. Game lists and grids are cached on your machine for speed.
+5. If OBS misses a settings event, the Browser Source checks the saved settings again within about five seconds.
 
 Everything listens on `127.0.0.1` only.
+
+---
+
+## Publish a download or update Git
+
+- **Windows download:** upload `RetroUnlock Companion.zip` to your VPS as a downloadable file, or attach it to a GitHub Release. It contains the complete Windows app; users extract it and run `RetroUnlock Companion.exe`.
+- **Source archive:** `RetroUnlock Live Source.zip` contains the code, README, installation guide, license, and documentation images. Use it to inspect or publish the source. To update an existing Git repository, copy the extracted source files into your checkout, review the changes, then commit and push them. Keep large release ZIPs out of the repository; attach them to a release instead.
+
+Neither archive includes your private `.env`, account data, `node_modules`, or local overlay settings. The VPS can serve the Windows ZIP for download. The Companion itself runs on the viewer's Windows PC and its OBS URLs use that PC's `127.0.0.1`; uploading the files to a VPS does not turn those URLs into remote web overlays.
 
 ---
 

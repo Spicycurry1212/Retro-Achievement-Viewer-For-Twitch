@@ -34,19 +34,20 @@ Treat this key like a password. RetroUnlock does not need you to give it to the 
 
 ## 3. Configure the Companion
 
-1. In the **RetroUnlock Companion desktop app** (not the website in your browser), open the visible top menu: **RetroUnlock → Open configuration folder**.
-2. Open the `.env` file with Notepad.
-3. Fill in only the two empty values below. Keep the names on the left unchanged:
+1. In the **RetroUnlock Companion desktop app**, click **Configure API / Configurer l’API**.
+2. Enter your RetroAchievements username and Web API key, then save.
+3. Wait for the status to show **Connected / Connecté** and for your recent games to load.
+
+The Companion stores these details in a private `.env` file in your Windows user profile. You can also open it from **RetroUnlock → Open configuration folder** if you need to edit it manually:
 
 ```env
 RETROACHIEVEMENTS_API_KEY=PASTE_YOUR_PRIVATE_KEY_HERE
 RETROACHIEVEMENTS_USERNAME=YourRetroAchievementsUsername
 POLL_INTERVAL_MS=10000
-PORT=3000
+PORT=17382
 ```
 
-4. Save the file.
-5. Close and reopen RetroUnlock Companion.
+If you edit `.env` manually, save it and reopen RetroUnlock Companion.
 
 `POLL_INTERVAL_MS=10000` means that the app checks for new unlocks every 10 seconds. Do not lower this value.
 
@@ -56,11 +57,13 @@ PORT=3000
 2. Choose an overlay type:
    - **Icon Grid**: game progress and achievement icons.
    - **Live Alert**: a popup when an achievement unlocks.
-3. Pick your colours, opacity, and number of columns.
+3. Pick your colours, opacity, number of columns, grid scroll speed, and optional alert sound.
 4. Click **Create my overlay**.
 5. Copy the OBS link displayed on the overlay card.
 
 For a full stream layout, create **two overlays for the same game**: one **Icon Grid** and one **Live Alert**. They are two separate OBS Browser Sources. The grid stays visible; the alert appears only when an achievement is unlocked.
+
+To change an existing overlay, click **Edit / Modifier** on its card and then **Save changes / Enregistrer les modifications**. Its OBS URL stays the same. For a grid, the **Columns / Colonnes** selector and scroll speed slider on the card save immediately. Grids with multiple rows slowly scroll down and back up so all badges can appear at a readable size.
 
 ## 5. Add it to OBS
 
@@ -93,8 +96,8 @@ Use **Test animation** inside RetroUnlock Companion. If the Browser Source is co
 ### OBS shows a blank page
 
 - Make sure RetroUnlock Companion is still open.
-- Copy the overlay URL again and replace the URL in the OBS Browser Source.
 - Click **Refresh cache of current page** in the Browser Source properties.
+- Check that the Browser Source URL matches the URL on the existing overlay card. Editing an overlay does not change that URL.
 
 ### I think I exposed my API key
 

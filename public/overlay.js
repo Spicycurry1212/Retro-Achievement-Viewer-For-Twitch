@@ -58,5 +58,17 @@ async function connect() {
   const showTestAlert = event => show(JSON.parse(event.data));
   events.addEventListener("unlock", showAlert);
   events.addEventListener("test-unlock", showTestAlert);
+  events.addEventListener("overlay-updated", event => {
+    if (JSON.parse(event.data).id === overlayId) location.reload();
+  });
+  const loadedSettings = JSON.stringify({ gameId: overlay.gameId, theme: overlay.theme });
+  setInterval(async () => {
+    try {
+      const response = await fetch(`/api/overlays/${encodeURIComponent(overlayId)}`, { cache: "no-store" });
+      if (!response.ok) return;
+      const current = (await response.json()).overlay;
+      if (JSON.stringify({ gameId: current.gameId, theme: current.theme }) !== loadedSettings) location.reload();
+    } catch { /* Retry when the Companion becomes available. */ }
+  }, 5000);
 }
 connect();

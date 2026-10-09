@@ -13,6 +13,12 @@
   Object.assign(messages.en, { configureApi: "Configure API", apiSetupLabel: "PRIVATE CONNECTION", apiSetup: "Connect RetroAchievements", apiSetupCopy: "Your key stays on this computer. It is never sent to a website or added to OBS.", apiUsername: "RetroAchievements username", apiKey: "RetroAchievements Web API key", saveConnection: "Save and connect", cancel: "Cancel", saveFailed: "Unable to save configuration." });
   Object.assign(messages.fr, { apiStorage: "Emplacement local de la clé :", apiDisclosure: "Version actuelle : fichier local .env, non synchronisé avec le cloud. Le chiffrement Windows Credential Manager arrive dans une prochaine version." });
   Object.assign(messages.en, { apiStorage: "Local key location:", apiDisclosure: "Current version: local .env file, never synced to the cloud. Windows Credential Manager encryption is planned for a future version." });
+  Object.assign(messages.fr, { scrollSpeed: "Vitesse de défilement", speedSaveFailed: "Impossible d’enregistrer la vitesse." });
+  Object.assign(messages.en, { scrollSpeed: "Scroll speed", speedSaveFailed: "Unable to save the speed." });
+  Object.assign(messages.fr, { edit: "Modifier", editOverlay: "MODIFIER L’OVERLAY", saveChanges: "Enregistrer les modifications", keepObsLink: "Le lien OBS reste le même et l’overlay se met à jour automatiquement.", removeSound: "Retirer le son personnalisé", changesSaved: "Modifications enregistrées. OBS est à jour.", editSaveFailed: "Impossible de modifier cet overlay." });
+  Object.assign(messages.en, { edit: "Edit", editOverlay: "EDIT OVERLAY", saveChanges: "Save changes", keepObsLink: "The OBS link stays the same and the overlay updates automatically.", removeSound: "Remove custom sound", changesSaved: "Changes saved. OBS is up to date.", editSaveFailed: "Unable to update this overlay." });
+  Object.assign(messages.fr, { columns: "Colonnes", columnsSaveFailed: "Impossible d’enregistrer les colonnes." });
+  Object.assign(messages.en, { columns: "Columns", columnsSaveFailed: "Unable to save the columns." });
   const requested = new URLSearchParams(location.search).get("lang");
   const saved = localStorage.getItem("retrounlock-language");
   const lang = ["fr", "en"].includes(requested) ? requested : (["fr", "en"].includes(saved) ? saved : (navigator.language.toLowerCase().startsWith("fr") ? "fr" : "en"));
