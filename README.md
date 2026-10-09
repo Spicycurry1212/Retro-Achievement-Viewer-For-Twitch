@@ -1,12 +1,12 @@
 # RetroUnlock Live
 
-**RetroAchievements overlays for OBS** — free and open source.
+**RetroAchievements overlays for OBS** free and open source.
 
 Live unlock alerts, achievement icon grids, and a local Companion that runs on your PC. Your RetroAchievements API key never leaves your machine.
 
 - **Download:** [romhackpatcher.com/tools/retro-unlock](https://romhackpatcher.com/tools/retro-unlock)
 - **License:** PolyForm Noncommercial 1.0.0 (see [LICENSE](LICENSE))
-- **Status:** Waiting for feedback — early prototype, active development
+- **Status:** Waiting for feedback. early prototype, active development
 
 ## What you get
 
@@ -164,7 +164,7 @@ For an existing grid, the **Columns / Colonnes** selector and **Scroll speed / V
 6. Optional: enable **Refresh browser when scene becomes active**.
 7. **OK**, move/resize the source, and keep the Companion running.
 
-**Test:** click **Test animation** / **Tester l’alerte OBS** in the Companion — it should appear in OBS right away.
+**Test:** click **Test animation** / **Tester l’alerte OBS** in the Companion it should appear in OBS right away.
 
 ---
 
@@ -197,7 +197,7 @@ RetroUnlock Live is free and open source. If it helps your stream, you can suppo
 
 **[ko-fi.com/romhackpatcher](https://ko-fi.com/romhackpatcher)** ☕
 
-Donations are optional — the app stays free.
+Donations are optional the app stays free.
 
 ## Project status
 
