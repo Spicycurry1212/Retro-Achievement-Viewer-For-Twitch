@@ -22,7 +22,9 @@ When a game has multiple rows of badges, the icon grid continuously scrolls from
 ### Recent additions
 
 - **Edit existing overlays:** change the name, game, colours, opacity, grid columns, scroll speed, alert volume, or custom sound. The overlay ID and OBS URL stay the same.
-- **Quick grid controls:** change columns (3–12) and scroll speed directly on the grid card in **My overlays**; these controls save immediately.
+- **Quick grid controls:** change columns (3–12), visible rows (1–8), card width (240–920 px), and scroll speed directly in **My overlays**; these controls save immediately.
+- **Quick alert controls:** change the alert colors, opacity, volume, or custom MP3/WAV/OGG sound directly in **My overlays**. You can also remove a custom sound to restore the default chime. Use **Edit** for the overlay name, game, and other settings.
+- **Grid size for OBS:** use **Edit** to choose 1–8 visible badge rows and a card width from 240–920 px. The grid scrolls through every remaining achievement within the space available in the OBS Browser Source. Keep the Browser Source itself large enough for the chosen width and height; for a narrow side panel, start with 4 columns, 2 visible rows, and a width around 340 px.
 - **OBS updates automatically:** grid and alert pages respond to saved edits. They also check their saved settings every few seconds in case OBS misses a live update.
 - **Compact editor preview:** changing the column count no longer enlarges preview badges enough to push the Save button far down the page.
 

@@ -19,6 +19,10 @@
   Object.assign(messages.en, { edit: "Edit", editOverlay: "EDIT OVERLAY", saveChanges: "Save changes", keepObsLink: "The OBS link stays the same and the overlay updates automatically.", removeSound: "Remove custom sound", changesSaved: "Changes saved. OBS is up to date.", editSaveFailed: "Unable to update this overlay." });
   Object.assign(messages.fr, { columns: "Colonnes", columnsSaveFailed: "Impossible d’enregistrer les colonnes." });
   Object.assign(messages.en, { columns: "Columns", columnsSaveFailed: "Unable to save the columns." });
+  Object.assign(messages.fr, { visibleRows: "Rangées visibles", gridWidth: "Largeur de la grille" });
+  Object.assign(messages.en, { visibleRows: "Visible rows", gridWidth: "Grid width" });
+  Object.assign(messages.fr, { accentColor: "Couleur", backgroundColor: "Fond", opacityLabel: "Opacité", alertVolume: "Volume", alertSound: "Son personnalisé", customSoundActive: "Son personnalisé actif · MP3, WAV ou OGG", defaultSoundActive: "Son par défaut · MP3, WAV ou OGG", quickSaveFailed: "Impossible d’enregistrer ce réglage.", soundTooLarge: "Le son doit faire au maximum 5 Mo.", soundFormatError: "Choisis un fichier MP3, WAV ou OGG." });
+  Object.assign(messages.en, { accentColor: "Color", backgroundColor: "Background", opacityLabel: "Opacity", alertVolume: "Volume", alertSound: "Custom sound", customSoundActive: "Custom sound active · MP3, WAV or OGG", defaultSoundActive: "Default sound · MP3, WAV or OGG", quickSaveFailed: "Unable to save this setting.", soundTooLarge: "The sound file must be 5 MB or smaller.", soundFormatError: "Choose an MP3, WAV or OGG file." });
   const requested = new URLSearchParams(location.search).get("lang");
   const saved = localStorage.getItem("retrounlock-language");
   const lang = ["fr", "en"].includes(requested) ? requested : (["fr", "en"].includes(saved) ? saved : (navigator.language.toLowerCase().startsWith("fr") ? "fr" : "en"));

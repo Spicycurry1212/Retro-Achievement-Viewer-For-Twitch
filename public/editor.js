@@ -83,6 +83,8 @@ async function saveEditedOverlay() {
         background: document.querySelector("#theme-background").value,
         opacity: document.querySelector("#theme-opacity").value,
         columns: document.querySelector("#theme-columns").value,
+        visibleRows: document.querySelector("#theme-rows").value,
+        cardWidth: document.querySelector("#theme-card-width").value,
         scrollSpeed: document.querySelector("#theme-scroll-speed").value,
         soundVolume: document.querySelector("#theme-volume").value,
         soundFile
@@ -135,6 +137,10 @@ document.querySelector("#overlays").addEventListener("click", async event => {
     columns.add(new Option(String(theme.columns), String(theme.columns)));
   }
   columns.value = String(theme.columns);
+  document.querySelector("#theme-rows").value = String(theme.visibleRows || 2);
+  document.querySelector("#theme-card-width").value = String(theme.cardWidth || 920);
+  document.querySelector("#card-width-value").textContent = `${theme.cardWidth || 920} px`;
+  document.querySelector("#theme-card-width").dispatchEvent(new Event("input"));
   document.querySelector("#theme-scroll-speed").value = theme.scrollSpeed;
   document.querySelector("#scroll-speed-value").textContent = `${theme.scrollSpeed} px/s`;
   document.querySelector("#theme-volume").value = theme.soundVolume;

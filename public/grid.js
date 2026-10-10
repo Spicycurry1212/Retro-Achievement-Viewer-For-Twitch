@@ -12,7 +12,7 @@ const esc = (value = "") => {
   return node.innerHTML;
 };
 
-function scrollAchievements(viewport, initialSpeed) {
+function scrollAchievements(viewport, initialSpeed, visibleRows) {
   const grid = viewport.firstElementChild;
   let frame;
   let lastTime;
@@ -52,7 +52,7 @@ function scrollAchievements(viewport, initialSpeed) {
     if (badge && grid.children.length > columns) {
       const rowHeight = badge.getBoundingClientRect().height;
       const gap = parseFloat(getComputedStyle(grid).rowGap) || 0;
-      viewport.style.maxHeight = `${Math.ceil(rowHeight * 1.5 + gap)}px`;
+      viewport.style.maxHeight = `${Math.ceil(rowHeight * visibleRows + gap * (visibleRows - 1))}px`;
     } else {
       viewport.style.maxHeight = "";
     }
@@ -67,8 +67,8 @@ function scrollAchievements(viewport, initialSpeed) {
   }
 
   const observer = new ResizeObserver(restart);
-  observer.observe(viewport);
-  observer.observe(viewport.firstElementChild);
+  observer.observe(grid);
+  window.addEventListener("resize", restart);
   restart();
   return value => { speed = Math.max(4, Math.min(60, Number(value) || 14)); };
 }
@@ -84,17 +84,17 @@ async function load() {
 
   const { grid, overlay } = await response.json();
   const theme = overlay.theme;
-  const visualKey = item => [item.gameId, item.theme.columns, item.theme.accent, item.theme.background, item.theme.opacity].join("|");
+  const visualKey = item => [item.gameId, item.theme.columns, item.theme.visibleRows, item.theme.cardWidth, item.theme.accent, item.theme.background, item.theme.opacity].join("|");
   const loadedVisualKey = visualKey(overlay);
   let observedSpeed = theme.scrollSpeed;
   const percent = grid.total ? Math.round(grid.earned / grid.total * 100) : 0;
   const next = grid.achievements.find(a => !a.earned);
   const style = document.createElement("style");
-  style.textContent = `.grid-card{background:${theme.background}!important;border-color:${theme.accent}!important;opacity:${theme.opacity / 100}}.icons{grid-template-columns:repeat(${theme.columns || 10},minmax(0,1fr))!important}.grid-progress i{background:${theme.accent}!important}.icon.hardcore{border:2px solid #ffd34e!important;box-shadow:0 0 8px #ffd34e77!important}.icon.softcore{border:2px solid #c8d0dc!important;box-shadow:0 0 7px #c8d0dc66!important}.next-achievement{border-color:${theme.accent}!important}.next-achievement b{color:${theme.accent}!important}`;
+  style.textContent = `.grid-card{width:min(${theme.cardWidth || 920}px,100%)!important;background:${theme.background}!important;border-color:${theme.accent}!important;opacity:${theme.opacity / 100}}.icons{grid-template-columns:repeat(${theme.columns || 10},minmax(0,1fr))!important}.grid-progress i{background:${theme.accent}!important}.icon.hardcore{border:2px solid #ffd34e!important;box-shadow:0 0 8px #ffd34e77!important}.icon.softcore{border:2px solid #c8d0dc!important;box-shadow:0 0 7px #c8d0dc66!important}.next-achievement{border-color:${theme.accent}!important}.next-achievement b{color:${theme.accent}!important}`;
   document.head.append(style);
 
   card.innerHTML = `<header><img src="${grid.icon}" alt=""><div><p>${t("progression")}</p><h1>${esc(grid.title)}</h1><strong>${grid.earned} <small>/ ${grid.total} ${t("achievements")}</small> <em>${percent}%</em></strong></div></header><div class="grid-progress"><i style="width:${percent}%"></i></div><div class="icons-viewport"><div class="icons">${grid.achievements.map(a => `<div class="icon ${a.earned ? (a.hardcore ? "hardcore" : "softcore") : "locked"}" title="${esc(a.title)}"><img src="${a.badgeUrl}" alt=""></div>`).join("")}</div></div><div class="mode-legend"><span class="legend-hardcore">● Hardcore</span><span class="legend-softcore">● Softcore</span></div>${next ? `<aside class="next-achievement"><img src="${next.badgeUrl}" alt=""><div><p>${t("nextAchievement")}</p><h2>${esc(next.title)} <b>+${next.points} pts</b></h2><span>${esc(next.description)}</span></div></aside>` : `<aside class="next-achievement"><div><p>${t("complete")}</p><h2>${t("allUnlocked")}</h2></div></aside>`}`;
-  const setScrollSpeed = scrollAchievements(card.querySelector(".icons-viewport"), theme.scrollSpeed || 14);
+  const setScrollSpeed = scrollAchievements(card.querySelector(".icons-viewport"), theme.scrollSpeed || 14, theme.visibleRows || 2);
 
   const stream = new EventSource("/api/events");
   const refreshGrid = event => {

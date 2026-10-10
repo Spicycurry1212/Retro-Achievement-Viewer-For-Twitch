@@ -8,3 +8,4 @@
 .icons-viewport::-webkit-scrollbar{display:none}
 .icons{overflow:visible}
 @media(max-width:680px){.grid-card{max-height:calc(100vh - 24px)}}
+@media(max-width:420px){.grid-overlay{padding:8px}.grid-card{padding:10px;max-height:calc(100vh - 16px)}.grid-card header>img{width:38px;height:38px}.grid-card h1{font-size:16px}.grid-progress{margin:10px 0}.next-achievement{margin-top:8px;padding:8px}.next-achievement h2{font-size:13px}.next-achievement span{font-size:11px}.mode-legend{font-size:10px}}
